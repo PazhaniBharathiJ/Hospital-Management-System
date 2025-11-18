@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 500px;">
+
+    <h3 class="mb-3">All Pages</h3>
+
+    <ul class="list-group">
+
+        <li class="list-group-item">
+            <a href="{{ url_for('index') }}">Home</a>
+        </li>
+
+        <li class="list-group-item">
+            <a href="{{ url_for('login', role='patient') }}">Login</a>
+        </li>
+
+        <li class="list-group-item">
+            <a href="{{ url_for('register', role='patient') }}">Register</a>
+        </li>
+
+        <li class="list-group-item">
+            <a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a>
+        </li>
+
+        <li class="list-group-item">
+            <a href="{{ url_for('doctor_dashboard') }}">Doctor Dashboard</a>
+        </li>
+
+        <li class="list-group-item">
+            <a href="{{ url_for('doctor_availability') }}">Doctor Availability</a>
+        </li>
+
+        <li class="list-group-item">
+            <a href="{{ url_for('patient_dashboard') }}">Patient Dashboard</a>
+        </li>
+
+    </ul>
+
+</div>
+{% endblock %}

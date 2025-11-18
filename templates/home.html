@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="d-flex flex-column align-items-center mt-5">
+
+    <a href="{{ url_for('admin_login') }}" class="btn btn-warning my-3 px-4 py-2">
+        Admin Login
+    </a>
+
+    <a href="{{ url_for('doctor_login') }}" class="btn btn-success my-3 px-4 py-2">
+        Doctor Login
+    </a>
+
+    <a href="{{ url_for('patient_login') }}" class="btn btn-info my-3 px-4 py-2">
+        Patient Login
+    </a>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4" style="max-width: 800px;">
+
+    <div class="border rounded p-4 d-flex">
+
+        <div style="flex: 2;">
+            <h3>Dr. {{ doctor.fullname }}</h3>
+
+            {% if doctor.qualification %}
+                <p>{{ doctor.qualification }}</p>
+            {% endif %}
+
+            {% if doctor.specialization %}
+                <p>{{ doctor.specialization }}</p>
+            {% endif %}
+
+            {% if doctor.experience %}
+                <p><b>{{ doctor.experience }} Years Experience Overall</b></p>
+            {% endif %}
+
+            {% if doctor.bio %}
+                <p>{{ doctor.bio }}</p>
+            {% else %}
+                <p>Dr. {{ doctor.fullname }} is a {{ doctor.department }} specialist.</p>
+            {% endif %}
+        </div>
+
+        <div class="text-center" style="flex: 1;">
+            <img src="https://cdn-icons-png.flaticon.com/512/847/847969.png"
+                 width="120" height="120"
+                 class="rounded-circle mb-2" alt="Doctor Image">
+        </div>
+    </div>
+
+    <div class="mt-3 d-flex">
+
+        <a href="{{ url_for('patient_doctor_availability', doctor_id=doctor.id) }}"
+           class="btn btn-primary me-3">
+           Check Availability
+        </a>
+
+        <a href="{{ url_for('patient_dashboard') }}"
+           class="btn btn-secondary">
+           Go Back
+        </a>
+
+    </div>
+
+</div>
+
+{% endblock %}

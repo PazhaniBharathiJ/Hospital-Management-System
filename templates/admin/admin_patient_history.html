@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4" style="max-width: 900px;">
+
+    <div class="d-flex justify-content-between mb-3">
+        <h3>Patient History</h3>
+        <div>
+            <a href="{{ url_for('admin_dashboard') }}" class="me-3">Dashboard</a>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+
+    <div class="border p-3 rounded">
+        <table class="table table-bordered text-center align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Visit Type</th>
+                    <th>Test</th>
+                    <th>Date</th>
+                    <th>Doctor</th>
+                    <th>Diagnosis</th>
+                    <th>Prescription</th>
+                    <th>Medicines</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for r in history %}
+                <tr>
+                    <td>{{ r.visit_type if r.visit_type else "In-person" }}</td>
+                    <td>{{ r.tests or "-" }}</td>
+                    <td>{{ r.date }}</td>
+                    <td>{{ r.doctor_name }}</td>
+                    <td>{{ r.diagnosis or "-" }}</td>
+                    <td>{{ r.prescription or "-" }}</td>
+                    <td>{{ r.notes or "-" }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="7">No history records found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}

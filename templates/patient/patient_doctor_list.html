@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4" style="max-width: 900px;">
+
+    <div class="d-flex justify-content-between mb-3 p-2 border rounded bg-light">
+        {% if doctors %}
+            <h5>Department of {{ doctors[0].department }}</h5>
+        {% else %}
+            <h5>Department</h5>
+        {% endif %}
+        <span>
+            <a href="{{ url_for('patient_history') }}" class="me-3">History</a>
+            <a href="{{ url_for('logout') }}">logout</a>
+        </span>
+    </div>
+
+    <div class="border rounded p-3 mb-4">
+        <h5>Overview</h5>
+        {% if doctors %}
+            <p>
+                The {{ doctors[0].department }} Department provides specialized healthcare
+                services related to {{ doctors[0].department }}. The team includes experienced
+                doctors offering complete treatment and care.
+            </p>
+        {% else %}
+            <p class="text-muted">No information available — no doctors found in this department.</p>
+        {% endif %}
+    </div>
+
+    <div class="border rounded p-3">
+        <h5>Doctors' List</h5>
+
+        {% if doctors %}
+            {% for doc in doctors %}
+            <div class="d-flex justify-content-between align-items-center border rounded p-2 mt-2">
+                <span>{{ doc.fullname }}</span>
+                <div>
+                    <a href="{{ url_for('patient_doctor_availability', doctor_id=doc.id) }}"
+                       class="btn btn-outline-primary btn-sm me-2">
+                        check availability
+                    </a>
+                    <a href="{{ url_for('patient_doctor_profile', doctor_id=doc.id) }}"
+                       class="btn btn-outline-primary btn-sm">
+                        view details
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted mt-3">No doctors available in this department.</p>
+        {% endif %}
+    </div>
+
+</div>
+
+{% endblock %}

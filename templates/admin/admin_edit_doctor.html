@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4" style="max-width: 500px;">
+
+    <h3 class="mb-3">Edit Doctor</h3>
+
+    <form method="POST">
+
+        <div class="mb-3">
+            <label>Full Name</label>
+            <input class="form-control" name="fullname" value="{{ doctor.fullname }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Email</label>
+            <input class="form-control" name="email" value="{{ doctor.email }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Department</label>
+            <select class="form-control" name="department">
+                {% for dept in departments %}
+                <option value="{{ dept.id }}"
+                    {% if doctor.dept_id == dept.id %}selected{% endif %}>
+                    {{ dept.name }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Experience</label>
+            <input class="form-control" name="experience" value="{{ doctor.experience }}">
+        </div>
+
+        <div class="mb-3">
+            <label>Bio</label>
+            <textarea class="form-control" name="bio">{{ doctor.bio }}</textarea>
+        </div>
+
+        <button class="btn btn-primary w-100">Save Changes</button>
+    </form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4" style="max-width: 900px;">
+
+    <h3 class="text-center mb-4">Doctor Dashboard</h3>
+
+    <div class="border rounded p-3 shadow-sm">
+
+        <div class="d-flex justify-content-between mb-3">
+            <h5>Welcome Dr. {{ doctor.fullname }}</h5>
+            <a href="{{ url_for('logout') }}" class="text-danger fw-bold">Logout</a>
+        </div>
+
+        <h6 class="mt-2"><b>Upcoming Appointments</b></h6>
+
+        <table class="table table-bordered mt-2 text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>Sr No.</th>
+                    <th>Patient Name</th>
+                    <th>Update Treatment</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for appt in appointments %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ appt.patient_name }}</td>
+
+                    <td>
+                        <a href="{{ url_for('doctor_update_appointment', appointment_id=appt.id) }}"
+                           class="btn btn-sm btn-primary">
+                           Update
+                        </a>
+                    </td>
+
+                    <td>
+                        <a href="{{ url_for('doctor_mark_complete', appointment_id=appt.id) }}"
+                           class="btn btn-sm btn-success">
+                           mark as complete
+                        </a>
+
+                        <a href="{{ url_for('patient_cancel', appointment_id=appt.id) }}"
+                           class="btn btn-sm btn-danger"
+                           onclick="return confirm('Cancel this appointment?')">
+                           Cancel
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" class="text-muted">No upcoming appointments</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h6 class="mt-4"><b>Assigned Patients</b></h6>
+
+        {% for ap in appointments %}
+        <div class="d-flex justify-content-between align-items-center border p-2 rounded mb-2">
+            <span>{{ ap.patient_name }}</span>
+
+            <a href="{{ url_for('doctor_view_patient_history', patient_id=ap.patient_id) }}"
+               class="btn btn-sm btn-outline-primary">
+               View History
+            </a>
+        </div>
+        {% else %}
+        <p class="text-muted">No assigned patients.</p>
+        {% endfor %}
+
+        <div class="text-end mt-3">
+            <a href="{{ url_for('doctor_availability') }}" class="btn btn-success">
+                Provide Availability
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

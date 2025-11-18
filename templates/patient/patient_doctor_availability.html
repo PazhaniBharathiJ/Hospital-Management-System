@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.slot-radio { display: none; }
+
+.slot-label {
+    padding: 6px 10px;
+    font-size: 13px;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    cursor: pointer;
+    margin: 4px;
+    display: inline-block;
+    background: #f8f9fa;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.slot-label:hover {
+    background: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.slot-radio:checked + .slot-label {
+    background: #0d6efd;
+    color: #fff;
+    border-color: #0a58ca;
+}
+
+.slot-full {
+    background: #ffdddd !important;
+    border-color: #ff8d8d !important;
+    color: #b80000 !important;
+    cursor: not-allowed;
+}
+
+.slot-booked {
+    background: #fff3cd !important;
+    border-color: #ffda6a !important;
+    color: #856404 !important;
+}
+</style>
+
+<div class="container mt-4" style="max-width:800px;">
+
+    <h3 class="text-center mb-3">Doctor Availability</h3>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="fw-bold mb-0">{{ doctor.fullname }}</h5>
+            <p class="text-muted mb-0">{{ doctor.department }}</p>
+        </div>
+    </div>
+
+    <form method="POST" action="{{ url_for('patient_book') }}">
+        <input type="hidden" name="doctor_id" value="{{ doctor.id }}">
+
+        {% for date, slots in slot_map.items() %}
+        <div class="card mb-3">
+            <div class="card-header bg-light fw-bold">{{ date }}</div>
+            <div class="card-body">
+                {% if slots %}
+                    {% for s in slots %}
+                        {% set key = date ~ '|' ~ s %}
+                        {% set count = booking_status.get(key, 0) %}
+                        {% if count >= SLOT_CAPACITY %}
+                            <span class="slot-label slot-full">{{ s }}</span>
+                        {% elif count > 0 %}
+                            <span class="slot-label slot-booked">{{ s }} ({{ count }} booked)</span>
+                        {% else %}
+                            <input type="radio" class="slot-radio" id="{{ date }}_{{ loop.index }}"
+                                   name="slot" value="{{ date }}|{{ s }}" required>
+                            <label class="slot-label" for="{{ date }}_{{ loop.index }}">{{ s }}</label>
+                        {% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted small mb-0">No availability</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+
+        <button class="btn btn-primary w-100 mt-2">Book Appointment</button>
+    </form>
+
+</div>
+
+{% endblock %}

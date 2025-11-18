@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4" style="max-width:700px;">
+
+    <h4>Set Availability — Dr. {{ doctor.fullname }}</h4>
+
+    <form method="POST">
+
+        <div class="mb-3">
+            <label class="form-label">Select Date</label>
+            <select name="date" class="form-select" required>
+                <option value="">Choose date</option>
+                {% for d in dates %}
+                <option value="{{ d }}">{{ d }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <label class="fw-bold">Available Slots</label>
+
+        <div class="p-3 border rounded mb-3">
+            <label class="d-block mb-2">
+                <input type="checkbox" name="blocks" value="morning">
+                Morning (8:00 AM – 12:00 PM)
+            </label>
+
+            <label class="d-block">
+                <input type="checkbox" name="blocks" value="evening">
+                Evening (4:00 PM – 9:00 PM)
+            </label>
+        </div>
+
+        <button class="btn btn-primary w-100">Save Availability</button>
+    </form>
+
+    <hr>
+
+    <h5>Your Current Availability</h5>
+
+    {% if existing_availability %}
+        {% for a in existing_availability %}
+        <div class="border rounded p-2 mb-2">
+            <b>{{ a.date }}</b> → {{ a.slots }}
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-muted">No availability added yet.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

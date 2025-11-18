@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+.box {
+    background: white;
+    padding: 20px;
+    border: 1px solid #ccc;
+    margin-bottom: 25px;
+}
+.btn-blue {
+    background: #e7f3ff;
+    color: #007bff;
+    border: 1px solid #007bff;
+    border-radius: 6px;
+    padding: 3px 15px;
+}
+.btn-blue:hover { background: #d4e9ff; }
+
+.btn-cancel {
+    background: #ffe6e6;
+    color: red;
+    border: 1px solid red;
+    border-radius: 6px;
+    padding: 3px 15px;
+}
+.btn-cancel:hover { background: #ffcccc; }
+
+table th, table td {
+    vertical-align: middle;
+}
+</style>
+
+<div class="container mt-4">
+
+    <h3 class="text-center mb-4">Patients' Dashboard</h3>
+
+    <div class="box">
+
+        <div class="d-flex justify-content-between">
+            <h5>Welcome, {{ patient.fullname }}</h5>
+            <div>
+                <a href="{{ url_for('patient_edit_profile') }}">Edit Profile</a>
+                <a href="{{ url_for('patient_history') }}" class="me-3">History</a>
+                <a href="{{ url_for('logout') }}">logout</a>
+            </div>
+        </div>
+
+        <h6 class="mt-4 mb-2">Departments</h6>
+
+        <table class="table table-bordered">
+            {% for dept in departments %}
+            <tr>
+                <td>{{ dept.name }}</td>
+                <td class="text-end">
+                    <a href="{{ url_for('patient_doctors', dept_id=dept.id) }}" class="btn-blue">view details</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <h6 class="mt-4 mb-2">Upcoming Appointments</h6>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Sr No.</th>
+                    <th>Doctor Name</th>
+                    <th>Dept</th>
+                    <th>Date</td>
+                    <th>Time</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% if appointments %}
+                    {% for a in appointments %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ a.doctor_name }}</td>
+                        <td>{{ a.dept }}</td>
+                        <td>{{ a.date }}</td>
+                        <td>{{ a.time }}</td>
+                        <td>
+                            <a href="{{ url_for('patient_cancel', appointment_id=a.id) }}"
+                               class="btn-cancel"
+                               onclick="return confirm('Cancel this appointment?')">
+                               cancel
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">No upcoming appointments.</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

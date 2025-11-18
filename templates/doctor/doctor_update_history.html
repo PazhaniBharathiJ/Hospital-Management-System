@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4" style="max-width: 700px;">
+
+    <h3 class="mb-3">Update Patient History</h3>
+
+    <p><b>Patient Name:</b> {{ appointment.patient_name }}</p>
+    <p><b>Department:</b> {{ doctor.department }}</p>
+
+    <form action="" method="POST" class="border rounded p-3">
+
+        <div class="row mb-3">
+            <div class="col">
+                <label>Visit Type</label>
+                <input type="text" name="visit_type" class="form-control">
+            </div>
+            <div class="col">
+                <label>Test Done</label>
+                <input type="text" name="tests" class="form-control">
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label>Diagnosis</label>
+            <input type="text" name="diagnosis" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label>Prescription</label>
+            <input type="text" name="prescription" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <label>Medicines</label>
+            <textarea name="notes" rows="4" class="form-control"
+                placeholder="Medicine 1   1-0-1
+Medicine 2   0-1-1
+Medicine 3   1-0-0"></textarea>
+        </div>
+
+        <button class="btn btn-success w-100">save</button>
+    </form>
+
+</div>
+
+{% endblock %}

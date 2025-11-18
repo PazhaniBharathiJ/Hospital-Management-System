@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4" style="max-width: 500px;">
+
+    <h4 class="mb-3 text-center">Edit Profile</h4>
+
+    <form method="POST" action="{{ url_for('patient_update_profile') }}">
+
+        <div class="mb-3">
+            <label>Full Name</label>
+            <input type="text" name="fullname" class="form-control"
+                   value="{{ patient.fullname }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Email</label>
+            <input type="email" name="email" class="form-control"
+                   value="{{ user.email }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Phone</label>
+            <input type="text" name="phone" class="form-control"
+                   value="{{ patient.phone }}">
+        </div>
+
+        <div class="mb-3">
+            <label>Username</label>
+            <input type="text" name="username" class="form-control"
+                   value="{{ user.username }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Password (leave empty to keep old password)</label>
+            <input type="password" name="password" class="form-control">
+        </div>
+
+        <button class="btn btn-success w-100">Save Changes</button>
+    </form>
+
+</div>
+
+{% endblock %}

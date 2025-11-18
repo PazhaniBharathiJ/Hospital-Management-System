@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 450px;">
+
+    <h3 class="mb-4 text-center">{{ role|capitalize }} Registration</h3>
+
+    <form action="/register/{{ role }}" method="POST" autocomplete="off">
+
+        <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input name="fullname" class="form-control" required>
+        </div>
+
+        {% if role == 'patient' %}
+        <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input name="email" type="email" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Phone</label>
+            <input name="phone" class="form-control" placeholder="Optional">
+        </div>
+        {% endif %}
+
+        <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input name="username" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input name="password" type="password" class="form-control" required>
+        </div>
+
+        <button class="btn btn-success w-100">Register</button>
+    </form>
+
+</div>
+{% endblock %}

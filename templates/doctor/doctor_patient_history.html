@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4" style="max-width: 900px;">
+
+    <div class="d-flex justify-content-between mb-3">
+        <h3>Patient History</h3>
+        <a href="{{ url_for('doctor_dashboard') }}" class="btn btn-outline-primary">back</a>
+    </div>
+
+    <p><b>Patient Name:</b> {{ patient.fullname }}</p>
+    <p><b>Doctor's Name:</b> Dr. {{ doctor.fullname }}</p>
+    <p><b>Department:</b> {{ doctor.department }}</p>
+
+    <div class="border rounded p-3 mt-3">
+        <table class="table table-bordered text-center align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Visit No.</th>
+                    <th>Visit Type</th>
+                    <th>Tests Done</th>
+                    <th>Diagnosis</th>
+                    <th>Prescription</th>
+                    <th>Medicines</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for row in history %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>In-person</td>
+                    <td>{{ row.tests or "-" }}</td>
+                    <td>{{ row.diagnosis or "-" }}</td>
+                    <td>{{ row.prescription or "-" }}</td>
+                    <td>{{ row.notes or "-" }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-muted">No records found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+{% endblock %}
