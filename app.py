@@ -191,8 +191,15 @@ def logout():
 # -------------------------
 @app.route("/register/<role>", methods=["GET", "POST"])
 def register(role):
-    if role not in ("admin", "patient"):
-        flash("Only admin and patient registration allowed.", "danger")
+
+    # ❌ Do NOT allow admin registration
+    if role == "admin":
+        flash("Admin account cannot be created. A default admin already exists.", "danger")
+        return redirect(url_for("index"))
+
+    # Only patient registration allowed
+    if role != "patient":
+        flash("Invalid registration type.", "danger")
         return redirect(url_for('index'))
 
     db = get_db()
@@ -200,13 +207,14 @@ def register(role):
     if request.method == "GET":
         return render_template("register.html", role=role)
 
-    # handle POST
+    # POST DATA
     fullname = (request.form.get('fullname') or "").strip()
     email = (request.form.get('email') or "").strip()
     username = (request.form.get('username') or "").strip()
     password = (request.form.get('password') or "").strip()
     phone = (request.form.get('phone') or "").strip()
 
+    # Validations
     if not fullname:
         flash("Full Name is required", "danger")
         return redirect(url_for('register', role=role))
@@ -216,50 +224,55 @@ def register(role):
         return redirect(url_for('register', role=role))
 
     if not password or len(password) < 4:
-        flash("Password is required and must be at least 4 characters", "danger")
+        flash("Password must be at least 4 characters", "danger")
         return redirect(url_for('register', role=role))
 
-    # patient-specific checks
-    if role == "patient":
-        if not email:
-            flash("Email is required for patient registration", "danger")
-            return redirect(url_for('register', role=role))
+    # Patient-specific validations
+    if not email:
+        flash("Email is required for patient registration", "danger")
+        return redirect(url_for('register', role=role))
 
-        email_exists = db.execute("SELECT id FROM users WHERE email=?", (email,)).fetchone()
-        if email_exists:
-            flash("Email already exists", "danger")
-            return redirect(url_for('register', role=role))
+    email_exists = db.execute("SELECT id FROM users WHERE email=?", (email,)).fetchone()
+    if email_exists:
+        flash("Email already exists", "danger")
+        return redirect(url_for('register', role=role))
 
-        if phone and (not phone.isdigit() or len(phone) < 10):
-            flash("Enter a valid phone number", "danger")
-            return redirect(url_for('register', role=role))
+    if phone and (not phone.isdigit() or len(phone) < 10):
+        flash("Enter a valid phone number", "danger")
+        return redirect(url_for('register', role=role))
 
-    # check username uniqueness
+    # Check username unique
     existing = db.execute("SELECT id FROM users WHERE username=?", (username,)).fetchone()
     if existing:
         flash("Username already exists", "danger")
         return redirect(url_for('register', role=role))
 
+    # Insert into DB
     try:
         pw_hash = generate_password_hash(password)
         cur = db.cursor()
-        cur.execute("INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)",
-                    (username, pw_hash, email, role))
+
+        cur.execute(
+            "INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)",
+            (username, pw_hash, email, role)
+        )
         user_id = cur.lastrowid
 
-        if role == "patient":
-            cur.execute("INSERT INTO patients (user_id, fullname, phone) VALUES (?, ?, ?)",
-                        (user_id, fullname, phone))
+        cur.execute(
+            "INSERT INTO patients (user_id, fullname, phone) VALUES (?, ?, ?)",
+            (user_id, fullname, phone)
+        )
 
         db.commit()
+
         flash("Registered successfully! Please login.", "success")
         return redirect(url_for("login", role=role))
+
     except Exception as e:
         db.rollback()
         print("REGISTER ERROR:", e)
-        flash("Registration failed due to an internal error.", "danger")
+        flash("Internal error occurred.", "danger")
         return redirect(url_for('register', role=role))
-
 # -------------------------
 # Admin routes
 # -------------------------
@@ -984,6 +997,31 @@ def debug_my_appts():
     for a in appts:
         out += str(dict(a)) + "<br>"
     return out
+# --------- Create Default Admin If Not Exists ---------
+from werkzeug.security import generate_password_hash
+
+def create_default_admin():
+    db = get_db()
+    existing_admin = db.execute("SELECT * FROM users WHERE role='admin'").fetchone()
+
+    if existing_admin:
+        return  # Admin already exists
+
+    username = "admin"
+    password = "admin123"
+    email = "admin@hms.com"
+    hashed_password = generate_password_hash(password)
+
+    db.execute("""
+        INSERT INTO users (username, password, email, role)
+        VALUES (?, ?, ?, 'admin')
+    """, (username, hashed_password, email))
+
+    db.commit()
+    print("✅ Default Admin Created: admin / admin123")
+
+create_default_admin()
+
 
 if __name__ == "__main__":
     app.run(debug=True)

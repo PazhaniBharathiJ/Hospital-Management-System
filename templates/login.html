@@ -21,10 +21,11 @@
         <button class="btn btn-primary w-100 mb-3">Login</button>
     </form>
 
-    {% if role == 'patient' or role == 'admin' %}
+    <!-- Only PATIENT can register -->
+    {% if role == 'patient' %}
     <div class="text-center mt-2">
         <span>New user?</span><br>
-        <a href="/register/{{ role }}" class="btn btn-warning mt-2">Register</a>
+        <a href="/register/patient" class="btn btn-warning mt-2">Register</a>
     </div>
     {% endif %}
 
