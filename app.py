@@ -563,7 +563,7 @@ def doctor_availability():
         return redirect(url_for('doctor_availability'))
 
     today = datetime.today().date()
-    dates = [(today + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(0, 30)]
+    dates = [(today + timedelta(days=i)).strftime("%Y-%m-%d") for i in range(1, 32)]
 
     existing_availability = db.execute("SELECT date, slots FROM availability WHERE doctor_id=? ORDER BY date ASC", (doctor['id'],)).fetchall()
 
